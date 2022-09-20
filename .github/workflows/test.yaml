@@ -15,7 +15,7 @@ jobs:
           cache-name: test-caching
         with:
           # npm cache files are stored in `~/.npm` on Linux/macOS
-          path: ~/.npm
+          path: ~/test-caching
           key: ${{ env.cache-name }}
           # restore-keys: |
           #   ${{ runner.os }}-build-${{ env.cache-name }}-
@@ -26,15 +26,6 @@ jobs:
         name: List the state of node modules
         continue-on-error: true
         run: find test-caching/ -type f | xargs tail -n +1
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build
-        run: npm build
-
-      - name: Test
-        run: npm test
 
 
   blueberry:
