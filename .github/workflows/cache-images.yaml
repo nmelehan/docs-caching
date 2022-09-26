@@ -27,7 +27,8 @@ jobs:
           echo "${{ github.run_id }}" >> ~/test-caching/run_ids.txt
           echo "${{ github.run_number }}" >> ~/test-caching/run_ids.txt
           echo "${{ github.ref }}" >> ~/test-caching/run_ids.txt
-          echo "${{ github.sha }}\n" >> ~/test-caching/run_ids.txt
+          echo "${{ github.sha }}" >> ~/test-caching/run_ids.txt
+          echo "" >> ~/test-caching/run_ids.txt
 
 
 
