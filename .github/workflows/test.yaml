@@ -8,7 +8,7 @@ on:
 
 jobs:
   cache-images:
-    if: ${{ github.event_name }} == 'push'
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -33,7 +33,7 @@ jobs:
           echo "${{ github.sha }}\n" >> ~/test-caching/run_ids.txt
 
   test-caching:
-    if: ${{ github.event_name }} == 'pull_request'
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
