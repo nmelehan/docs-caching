@@ -8,22 +8,16 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Cache node modules
-        id: cache-npm
-        uses: actions/cache@v3
+      - name: Restore cache
+        uses: ylemkimon/cache-restore@v2
         env:
-          cache-name: test-caching
+          cache-name: develop-text-files-dir-test
         with:
-          # npm cache files are stored in `~/.npm` on Linux/macOS
           path: ~/test-caching
           key: ${{ env.cache-name }}
-          # restore-keys: |
-          #   ${{ runner.os }}-build-${{ env.cache-name }}-
-          #   ${{ runner.os }}-build-
-          #   ${{ runner.os }}-
 
-      - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
-        name: List the state of node modules
+      - if: ${{ steps.cache-npm.outputs.cache-hit == 'true' }}
+        name: List restored text files
         continue-on-error: true
         run: find test-caching/ -type f | xargs tail -n +1
 
