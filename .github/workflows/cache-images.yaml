@@ -3,7 +3,7 @@ name: CI Tests
 on:
   push:
     branches:
-      - develop
+      - feat/test-gha-image-caching)
 
 jobs:
   cache-images:
