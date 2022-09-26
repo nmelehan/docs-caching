@@ -14,6 +14,7 @@ jobs:
           cache-name: develop-text-files-dir-test
         with:
           path: ~/test-caching
+          key: ${{ env.cache-name }}
           restore-keys: ${{ env.cache-name }}
 
       - if: ${{ steps.cache-npm.outputs.cache-hit == 'true' }}
