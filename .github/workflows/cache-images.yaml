@@ -30,6 +30,19 @@ jobs:
           echo "${{ github.sha }}" >> ~/test-caching/run_ids.txt
           echo "" >> ~/test-caching/run_ids.txt
 
+      - name: List existing caches
+          uses: octokit/request-action@v2.x
+          id: list_existing_caches
+          with:
+            route: GET /repos/{owner}/{repo}/actions/caches
+            owner: nmelehan
+            repo: docs-caching
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: "echo Release found: ${{ steps.list_existing_caches.outputs.data }}"
+      - run: "echo Release could not be found. Request failed with status ${{ steps.list_existing_caches.outputs.status }}"
+        if: ${{ failure() }}
+
 
 
     # - name: Cache images dir

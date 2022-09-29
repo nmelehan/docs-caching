@@ -48,11 +48,6 @@ jobs:
       - name: List restored text files
         continue-on-error: true
         run: |
-          pwd
-          ls -al
-          ls -al ..
-          ls -al ~
-          ls -al ../..
           echo ${{ steps.restore-cache-test-files.outputs.cache-hit == 'true' }}
           cat ~/test-caching/run_ids.txt
 
