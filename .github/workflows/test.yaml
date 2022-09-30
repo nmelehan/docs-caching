@@ -83,12 +83,12 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Restore Hugo generated images cache
-        id: restore-cache-test-files
-        uses: ylemkimon/cache-restore@v2
-        with:
-          path: ${{ env.hugo-image-cache-path }}
-          key: ${{ env.hugo-image-cache-name }}
-          restore-keys: ${{ env.hugo-image-cache-name }}
+      id: restore-cache-test-files
+      uses: ylemkimon/cache-restore@v2
+      with:
+        path: ${{ env.hugo-image-cache-path }}
+        key: ${{ env.hugo-image-cache-name }}
+        restore-keys: ${{ env.hugo-image-cache-name }}
     - name: List contents of images dir
       run: ls -al ${{ env.hugo-image-cache-path }}
     - name: Set up Python
