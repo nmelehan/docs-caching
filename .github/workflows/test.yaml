@@ -89,9 +89,9 @@ jobs:
         path: ${{ env.hugo-image-cache-path }}
         key: ${{ env.hugo-image-cache-name }}
         restore-keys: ${{ env.hugo-image-cache-name }}
-    # - name: List contents of images dir
-    #   run: |
-    #     ls -al ${{ env.hugo-image-cache-path }}
+    - name: List contents of images dir
+      run: |
+        ls -al ${{ env.hugo-image-cache-path }}
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
