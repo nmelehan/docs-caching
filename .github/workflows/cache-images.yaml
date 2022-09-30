@@ -7,7 +7,7 @@ on:
 
 env:
   hugo-image-cache-name: hugo-generated-images
-  hugo-image-cache-path: ~/hugo-generated-images/
+  hugo-image-cache-path: :cacheDir/images
   repo-name: docs-caching
   repo-owner: nmelehan
 
