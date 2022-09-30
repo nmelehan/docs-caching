@@ -22,7 +22,8 @@ jobs:
 
       - name: Output to test cache dir
         run: |
-          jq
+          jq --help > ~/jq_help.txt
+          cat ~/jq_help.txt
           mkdir -p ~/test-caching
           date >> ~/test-caching/run_ids.txt
           echo "${{ github.run_id }}" >> ~/test-caching/run_ids.txt
