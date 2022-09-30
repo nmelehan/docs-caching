@@ -5,94 +5,78 @@ on:
     branches:
       - feat/test-gha-image-caching
 
+env:
+  hugo-image-cache-name: hugo-generated-images
+  hugo-image-cache-path: ~/hugo-generated-images/
+  repo-name: docs-caching
+  repo-owner: nmelehan
+
 jobs:
   cache-images:
     runs-on: ubuntu-latest
     steps:
-      - name: Cache text files dir
+
+      - name: Cache images dir
         uses: actions/cache@v2
-        env:
-          cache-name: develop-text-files-dir-test
         with:
-          path: ~/test-caching
-          # Look to see if there is a cache hit for the corresponding requirements file
-          key: ${{ env.cache-name }}-${{ github.run_id }}
+          path: ${{ env.hugo-image-cache-path }}
+          key: ${{ env.hugo-image-cache-name }}-${{ github.run_id }}
           restore-keys: |
-            ${{ env.cache-name }}
+            ${{ env.hugo-image-cache-name }}
 
-      - name: Output to test cache dir
-        run: |
-          mkdir -p ~/test-caching
-          date >> ~/test-caching/run_ids.txt
-          echo "${{ github.run_id }}" >> ~/test-caching/run_ids.txt
-          echo "${{ github.run_number }}" >> ~/test-caching/run_ids.txt
-          echo "${{ github.ref }}" >> ~/test-caching/run_ids.txt
-          echo "${{ github.sha }}" >> ~/test-caching/run_ids.txt
-          echo "" >> ~/test-caching/run_ids.txt
+      - uses: actions/checkout@v2
 
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10.x'
+          architecture: 'x64'
 
-      - name: Second cache text files dir
+      - name: Cache pip
         uses: actions/cache@v2
-        env:
-          cache-name: second-text-files-dir-test
         with:
-          path: ~/test-caching2
+          path: ~/.cache/pip
           # Look to see if there is a cache hit for the corresponding requirements file
-          key: ${{ env.cache-name }}-${{ github.run_id }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('./ci/requirements.txt') }}
           restore-keys: |
-            ${{ env.cache-name }}
+            ${{ runner.os }}-pip-
+            ${{ runner.os }}-
 
-      - name: Second output to test cache dir
+      - name: Install dependencies
         run: |
-          mkdir -p ~/test-caching2
-          date >> ~/test-caching2/run_ids2.txt
-          echo "${{ github.run_id }}" >> ~/test-caching2/run_ids2.txt
-          echo "${{ github.run_number }}" >> ~/test-caching2/run_ids2.txt
-          echo "${{ github.ref }}" >> ~/test-caching2/run_ids2.txt
-          echo "${{ github.sha }}" >> ~/test-caching2/run_ids2.txt
-          echo "" >> ~/test-caching2/run_ids2.txt
+          python -m pip install --upgrade pip
+          pip install -r ./ci/requirements.txt
 
-      # - name: List existing caches
-      #   uses: octokit/request-action@v2.x
-      #   id: list_existing_caches
-      #   with:
-      #     route: GET /repos/{owner}/{repo}/actions/caches
-      #     owner: nmelehan
-      #     repo: docs-caching
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      # - run: "echo Release found: ${{ steps.list_existing_caches.outputs.data }}"
-      # - run: "echo Release could not be found. Request failed with status ${{ steps.list_existing_caches.outputs.status }}"
-      #   if: ${{ failure() }}
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
 
-      - name: Get existing caches
+      - name: Install dependencies (Node)
+        run: npm install
+
+      - name: Set up Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: '0.83.1'
+
+      - name: Build Hugo
+        run: |
+          export HUGO_CACHES_IMAGES_DIR="${{ env.hugo-image-cache-path }}"
+          hugo --gc
+
+      - name: Get existing Hugo image caches
         run: |
           curl \
           -H "Accept: application/vnd.github+json" \
           -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-          https://api.github.com/repos/${{ env.repo-owner }}/${{ env.repo-name }}/actions/caches?key=${{ env.cache-restore-key }} \
+          https://api.github.com/repos/${{ env.repo-owner }}/${{ env.repo-name }}/actions/caches?key=${{ env.hugo-image-cache-name }} \
           -o cache-list.json
-        env:
-          cache-restore-key: second-text-files-dir-test
-          repo-name: docs-caching
-          repo-owner: nmelehan
 
-      - name: List existing caches
-        run: |
+          echo "The following caches will be deleted:"
           cat cache-list.json
 
-      # - name: Delete caches
-      #   run: |
-      #     curl \
-      #     -X DELETE \
-      #     -H "Accept: application/vnd.github+json" \
-      #     -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-      #     https://api.github.com/repos/${{ env.repo-owner }}/${{ env.repo-name }}/actions/caches?key=second-text-files-dir-test
-      #   env:
-      #     repo-name: docs-caching
-      #     repo-owner: nmelehan
-
-      - name: Delete caches
+      - name: Delete existing Hugo image caches
         run: |
           for id in $(jq '.actions_caches[].id' cache-list.json); do
             echo "Deleting cache with id $id"
@@ -102,70 +86,17 @@ jobs:
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
             https://api.github.com/repos/${{ env.repo-owner }}/${{ env.repo-name }}/actions/caches/$id
           done
-        env:
-          repo-name: docs-caching
-          repo-owner: nmelehan
 
-      - name: Get existing caches 2
+      - name: Get existing Hugo image caches 2
         run: |
           curl \
           -H "Accept: application/vnd.github+json" \
           -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-          https://api.github.com/repos/${{ env.repo-owner }}/${{ env.repo-name }}/actions/caches \
+          https://api.github.com/repos/${{ env.repo-owner }}/${{ env.repo-name }}/actions/caches?key=${{ env.hugo-image-cache-name }} \
           -o cache-list2.json
-        env:
-          repo-name: docs-caching
-          repo-owner: nmelehan
-      - name: List existing caches 2
-        run: |
+
+          echo "The following caches will be deleted:"
           cat cache-list2.json
 
-      - name: print run IDs from second cache
-        run: cat ~/test-caching2/run_ids2.txt
-
-      # - run: "echo Release found: ${{ steps.list_existing_caches.outputs.data }}"
-      # - run: "echo Release could not be found. Request failed with status ${{ steps.list_existing_caches.outputs.status }}"
-      #   if: ${{ failure() }}
-
-
-
-    # - name: Cache images dir
-    #   uses: actions/cache@v2
-    #   with:
-    #     path: resources/_gen/images/
-    #     # Look to see if there is a cache hit for the corresponding requirements file
-    #     key: develop-images-cache-${{ github.run_id }}
-    #     restore-keys: |
-    #       develop-images-cache
-    # - uses: actions/checkout@v2
-    # - name: Set up Python
-    #   uses: actions/setup-python@v2
-    #   with:
-    #     python-version: '3.10.x'
-    #     architecture: 'x64'
-    # - name: Cache pip
-    #   uses: actions/cache@v2
-    #   with:
-    #     path: ~/.cache/pip
-    #     # Look to see if there is a cache hit for the corresponding requirements file
-    #     key: ${{ runner.os }}-pip-${{ hashFiles('./ci/requirements.txt') }}
-    #     restore-keys: |
-    #       ${{ runner.os }}-pip-
-    #       ${{ runner.os }}-
-    # - name: Install dependencies
-    #   run: |
-    #     python -m pip install --upgrade pip
-    #     pip install -r ./ci/requirements.txt
-    # - name: Use Node.js
-    #   uses: actions/setup-node@v1
-    #   with:
-    #     node-version: '12.x'
-    # - name: Install dependencies (Node)
-    #   run: npm install
-    # - name: Set up Hugo
-    #   uses: peaceiris/actions-hugo@v2
-    #   with:
-    #     hugo-version: '0.83.1'
-    # - name: Build Hugo
-    #   run: hugo --gc
-    # - name: Delete old image caches
+      - name: List contents of images dir
+        run: ls -al ${{ env.hugo-image-cache-path }}
