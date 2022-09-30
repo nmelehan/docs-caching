@@ -22,8 +22,6 @@ jobs:
 
       - name: Output to test cache dir
         run: |
-          jq --help > ~/jq_help.txt
-          cat ~/jq_help.txt
           mkdir -p ~/test-caching
           date >> ~/test-caching/run_ids.txt
           echo "${{ github.run_id }}" >> ~/test-caching/run_ids.txt
@@ -74,12 +72,16 @@ jobs:
           -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
           https://api.github.com/repos/${{ env.repo-owner }}/${{ env.repo-name }}/actions/caches \
           -o cache-list.json
+
+          jq '.actions_caches | map(select(.key | contains("${{ env.cache-restore-key }}")) | .)' cache-list.json > filtered-cache-list.json
         env:
+          cache-restore-key: second-text-files-dir-test
           repo-name: docs-caching
           repo-owner: nmelehan
+
       - name: List existing caches
         run: |
-          cat cache-list.json
+          cat filtered-cache-list.json
 
       - name: Delete caches
         run: |
