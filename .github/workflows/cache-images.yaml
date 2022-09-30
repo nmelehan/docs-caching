@@ -22,6 +22,7 @@ jobs:
 
       - name: Output to test cache dir
         run: |
+          jq
           mkdir -p ~/test-caching
           date >> ~/test-caching/run_ids.txt
           echo "${{ github.run_id }}" >> ~/test-caching/run_ids.txt
