@@ -82,6 +82,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: List contents of images dir
+      continue-on-error: true
+      run: ls -al ${{ env.hugo-image-cache-path }}
     - name: Restore Hugo generated images cache
       id: restore-cache-test-files
       uses: ylemkimon/cache-restore@v2
@@ -90,8 +93,8 @@ jobs:
         key: ${{ env.hugo-image-cache-name }}
         restore-keys: ${{ env.hugo-image-cache-name }}
     - name: List contents of images dir
-      run: |
-        ls -al ${{ env.hugo-image-cache-path }}
+      continue-on-error: true
+      run: ls -al ${{ env.hugo-image-cache-path }}
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
