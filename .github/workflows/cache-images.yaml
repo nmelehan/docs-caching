@@ -83,13 +83,26 @@ jobs:
         run: |
           cat filtered-cache-list.json
 
+      # - name: Delete caches
+      #   run: |
+      #     curl \
+      #     -X DELETE \
+      #     -H "Accept: application/vnd.github+json" \
+      #     -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+      #     https://api.github.com/repos/${{ env.repo-owner }}/${{ env.repo-name }}/actions/caches?key=second-text-files-dir-test
+      #   env:
+      #     repo-name: docs-caching
+      #     repo-owner: nmelehan
+
       - name: Delete caches
         run: |
-          curl \
-          -X DELETE \
-          -H "Accept: application/vnd.github+json" \
-          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-          https://api.github.com/repos/${{ env.repo-owner }}/${{ env.repo-name }}/actions/caches?key=second-text-files-dir-test
+          for id in $(jq '.[].id' filtered-cache-list.json); do
+            curl \
+            -X DELETE \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            https://api.github.com/repos/${{ env.repo-owner }}/${{ env.repo-name }}/actions/caches/$id
+          done
         env:
           repo-name: docs-caching
           repo-owner: nmelehan
