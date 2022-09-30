@@ -91,7 +91,3 @@ jobs:
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
             https://api.github.com/repos/${{ env.repo-owner }}/${{ env.repo-name }}/actions/caches/$id
           done
-
-      - name: List contents of images dir
-        continue-on-error: true
-        run: ls -al ${{ env.hugo-image-cache-path }}
