@@ -121,7 +121,7 @@ jobs:
           cat cache-list2.json
 
       - name: print run IDs from second cache
-        run: echo ~/test-caching2/run_ids2.txt
+        run: cat ~/test-caching2/run_ids2.txt
 
       # - run: "echo Release found: ${{ steps.list_existing_caches.outputs.data }}"
       # - run: "echo Release could not be found. Request failed with status ${{ steps.list_existing_caches.outputs.status }}"
