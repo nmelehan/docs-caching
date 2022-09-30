@@ -43,16 +43,20 @@ jobs:
       # - run: "echo Release could not be found. Request failed with status ${{ steps.list_existing_caches.outputs.status }}"
       #   if: ${{ failure() }}
 
-      - name: List existing caches
+      - name: Get existing caches
         run: |
           curl \
           -H "Accept: application/vnd.github+json" \
           -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
           https://api.github.com/repos/${{ env.repo-owner }}/${{ env.repo-name }}/actions/caches
+          -o cache-list.json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           repo-name: docs-caching
           repo-owner: nmelehan
+      - name: List existing caches
+        run: |
+          echo cache-list.json
       # - run: "echo Release found: ${{ steps.list_existing_caches.outputs.data }}"
       # - run: "echo Release could not be found. Request failed with status ${{ steps.list_existing_caches.outputs.status }}"
       #   if: ${{ failure() }}
