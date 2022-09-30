@@ -85,7 +85,7 @@ jobs:
           -X DELETE \
           -H "Accept: application/vnd.github+json" \
           -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-          https://api.github.com/repos/${{ env.repo-owner }}/${{ env.repo-name }}/actions/caches/3156562747
+          https://api.github.com/repos/${{ env.repo-owner }}/${{ env.repo-name }}/actions/caches/29
         env:
           repo-name: docs-caching
           repo-owner: nmelehan
