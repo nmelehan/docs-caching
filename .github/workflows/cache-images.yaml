@@ -64,7 +64,7 @@ jobs:
           hugo-version: '0.83.1'
 
       - name: Build Hugo
-        run: hugo --gc
+        run: hugo
 
       - name: Get existing Hugo image caches
         run: |
