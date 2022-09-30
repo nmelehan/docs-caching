@@ -86,7 +86,6 @@ jobs:
       continue-on-error: true
       run: ls -al ${{ env.hugo-image-cache-path }}
     - name: Restore Hugo generated images cache
-      id: restore-cache-test-files
       uses: ylemkimon/cache-restore@v2
       with:
         path: ${{ env.hugo-image-cache-path }}

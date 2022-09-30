@@ -68,9 +68,9 @@ jobs:
           hugo-version: '0.83.1'
 
       - name: Build Hugo
-        run: hugo
+        run: hugo --gc
 
-      - name: Get existing Hugo image caches
+      - name: List existing Hugo image caches
         run: |
           curl \
           -H "Accept: application/vnd.github+json" \
@@ -91,17 +91,6 @@ jobs:
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
             https://api.github.com/repos/${{ env.repo-owner }}/${{ env.repo-name }}/actions/caches/$id
           done
-
-      - name: Get existing Hugo image caches 2
-        run: |
-          curl \
-          -H "Accept: application/vnd.github+json" \
-          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-          https://api.github.com/repos/${{ env.repo-owner }}/${{ env.repo-name }}/actions/caches?key=${{ env.hugo-image-cache-name }} \
-          -o cache-list2.json
-
-          echo "The following caches will be deleted:"
-          cat cache-list2.json
 
       - name: List contents of images dir
         continue-on-error: true
