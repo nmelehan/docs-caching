@@ -73,12 +73,37 @@ jobs:
           https://api.github.com/repos/${{ env.repo-owner }}/${{ env.repo-name }}/actions/caches \
           -o cache-list.json
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           repo-name: docs-caching
           repo-owner: nmelehan
       - name: List existing caches
         run: |
           cat cache-list.json
+
+      - name: Get existing caches
+        run: |
+          curl \
+          -X DELETE \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          https://api.github.com/repos/${{ env.repo-owner }}/${{ env.repo-name }}/actions/caches?key=second-text-files-dir-test
+        env:
+          repo-name: docs-caching
+          repo-owner: nmelehan
+
+      - name: Get existing caches 2
+        run: |
+          curl \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          https://api.github.com/repos/${{ env.repo-owner }}/${{ env.repo-name }}/actions/caches \
+          -o cache-list2.json
+        env:
+          repo-name: docs-caching
+          repo-owner: nmelehan
+      - name: List existing caches 2
+        run: |
+          cat cache-list2.json
+
       # - run: "echo Release found: ${{ steps.list_existing_caches.outputs.data }}"
       # - run: "echo Release could not be found. Request failed with status ${{ steps.list_existing_caches.outputs.status }}"
       #   if: ${{ failure() }}
