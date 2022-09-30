@@ -80,8 +80,6 @@ jobs:
       - name: List existing caches
         run: |
           cat cache-list.json
-          echo "--------------"
-          cat filtered-cache-list.json
 
       # - name: Delete caches
       #   run: |
