@@ -24,6 +24,9 @@ jobs:
           restore-keys: |
             ${{ env.hugo-image-cache-name }}
 
+      - name: List contents of images dir
+        run: ls -al ${{ env.hugo-image-cache-path }}
+
       - uses: actions/checkout@v2
 
       - name: Set up Python
@@ -96,5 +99,5 @@ jobs:
           echo "The following caches will be deleted:"
           cat cache-list2.json
 
-      # - name: List contents of images dir
-      #   run: ls -al ${{ env.hugo-image-cache-path }}
+      - name: List contents of images dir
+        run: ls -al ${{ env.hugo-image-cache-path }}

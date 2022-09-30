@@ -122,8 +122,6 @@ jobs:
         hugo-version: '0.83.1'
     - name: Start Hugo server
       run: |
-        hugo config | grep cache
-
         # Start Hugo in background:
         hugo server &
 
