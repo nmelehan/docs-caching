@@ -89,10 +89,9 @@ jobs:
         path: ${{ env.hugo-image-cache-path }}
         key: ${{ env.hugo-image-cache-name }}
         restore-keys: ${{ env.hugo-image-cache-name }}
-    - name: List contents of images dir
-      run: |
-        mkdir -p ${{ env.hugo-image-cache-path }}
-        ls -al ${{ env.hugo-image-cache-path }}
+    # - name: List contents of images dir
+    #   run: |
+    #     ls -al ${{ env.hugo-image-cache-path }}
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
@@ -123,6 +122,9 @@ jobs:
         hugo-version: '0.83.1'
     - name: Start Hugo server
       run: |
+        export HUGO_CACHES_IMAGES_DIR="${{ env.hugo-image-cache-path }}"
+        hugo config | grep cache
+
         # Start Hugo in background:
         hugo server &
 
@@ -147,7 +149,4 @@ jobs:
             sleep 1
         done
     - name: Run tests
-      run: |
-        export HUGO_CACHES_IMAGES_DIR="${{ env.hugo-image-cache-path }}"
-        hugo config | grep cache
-        python ./ci/docs404.py
+      run: python ./ci/docs404.py
