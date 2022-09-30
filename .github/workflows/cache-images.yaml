@@ -70,7 +70,7 @@ jobs:
           curl \
           -H "Accept: application/vnd.github+json" \
           -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-          https://api.github.com/repos/${{ env.repo-owner }}/${{ env.repo-name }}/actions/caches?key=${{ env.cache-restore-key }} \
+          https://api.github.com/repos/${{ env.repo-owner }}/${{ env.repo-name }}/actions/caches \
           -o cache-list.json
 
           jq '.actions_caches | map(select(.key | contains("${{ env.cache-restore-key }}")) | .)' cache-list.json > filtered-cache-list.json
