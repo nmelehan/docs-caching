@@ -62,6 +62,7 @@ jobs:
 
       - name: Build Hugo
         run: |
+          mkdir -p ${{ env.hugo-image-cache-path }}
           export HUGO_CACHES_IMAGES_DIR="${{ env.hugo-image-cache-path }}"
           hugo --gc
 
