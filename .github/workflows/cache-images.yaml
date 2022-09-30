@@ -30,6 +30,28 @@ jobs:
           echo "${{ github.sha }}" >> ~/test-caching/run_ids.txt
           echo "" >> ~/test-caching/run_ids.txt
 
+
+      - name: Second cache text files dir
+        uses: actions/cache@v2
+        env:
+          cache-name: second-text-files-dir-test
+        with:
+          path: ~/test-caching
+          # Look to see if there is a cache hit for the corresponding requirements file
+          key: ${{ env.cache-name }}-${{ github.run_id }}
+          restore-keys: |
+            ${{ env.cache-name }}
+
+      - name: Second output to test cache dir
+        run: |
+          mkdir -p ~/test-caching
+          date >> ~/test-caching/run_ids2.txt
+          echo "${{ github.run_id }}" >> ~/test-caching/run_ids2.txt
+          echo "${{ github.run_number }}" >> ~/test-caching/run_ids2.txt
+          echo "${{ github.ref }}" >> ~/test-caching/run_ids2.txt
+          echo "${{ github.sha }}" >> ~/test-caching/run_ids2.txt
+          echo "" >> ~/test-caching/run_ids2.txt
+
       # - name: List existing caches
       #   uses: octokit/request-action@v2.x
       #   id: list_existing_caches
