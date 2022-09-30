@@ -86,7 +86,7 @@ jobs:
           -H "Accept: application/vnd.github+json" \
           -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
           https://api.github.com/repos/${{ env.repo-owner }}/${{ env.repo-name }}/actions/caches \
-          -d key=second-text-files-dir-test
+          -d "key=second-text-files-dir-test"
         env:
           repo-name: docs-caching
           repo-owner: nmelehan
