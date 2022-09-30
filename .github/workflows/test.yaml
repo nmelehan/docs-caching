@@ -5,7 +5,7 @@ on:
 
 env:
   hugo-image-cache-name: hugo-generated-images
-  hugo-image-cache-path: :cacheDir/images
+  hugo-image-cache-path: /home/runner/work/docs-caching/docs-caching/resources/_gen/images/
 
 jobs:
   blueberry:
@@ -122,7 +122,6 @@ jobs:
         hugo-version: '0.83.1'
     - name: Start Hugo server
       run: |
-        export HUGO_CACHES_IMAGES_DIR="${{ env.hugo-image-cache-path }}"
         hugo config | grep cache
 
         # Start Hugo in background:

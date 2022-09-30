@@ -7,7 +7,7 @@ on:
 
 env:
   hugo-image-cache-name: hugo-generated-images
-  hugo-image-cache-path: :cacheDir/images
+  hugo-image-cache-path: /home/runner/work/docs-caching/docs-caching/resources/_gen/images/
   repo-name: docs-caching
   repo-owner: nmelehan
 
@@ -61,9 +61,7 @@ jobs:
           hugo-version: '0.83.1'
 
       - name: Build Hugo
-        run: |
-          export HUGO_CACHES_IMAGES_DIR="${{ env.hugo-image-cache-path }}"
-          hugo --gc
+        run: hugo --gc
 
       - name: Get existing Hugo image caches
         run: |
