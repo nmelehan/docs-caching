@@ -3,10 +3,10 @@ publish = "public"
 command = "hugo version && hugo --gc --minify -d public/docs;"
 
 [context.production.environment]
-HUGO_VERSION = "0.83.1"
+HUGO_VERSION = "0.104.3"
 
 [context.deploy-preview.environment]
-HUGO_VERSION = "0.83.1"
+HUGO_VERSION = "0.104.3"
 
 [[plugins]]
 package = "netlify-plugin-hugo-cache-resources"
